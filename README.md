@@ -1,2 +1,4 @@
 # csync-repo
-demo config-sync repo
+Demonstration repo for use wth Google Config sync
+
+
