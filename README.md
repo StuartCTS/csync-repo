@@ -1,6 +1,32 @@
 # csync-repo
 Demonstration repo for use wth Google Config sync
 
+## Prerequisites
+k8s cluster with kubectl access
+
+gcloud/gsutil access
+
+ability to create/update 
+
+## Installation
+
+nomos
+
+Config management operator
+
+Config management repo setup
+
+
+Config Sync
+
+
+PolicyController
+
+CRD
+
+
+
+
 TO DO write up install and put demo together
 
 307  kubectl apply -f config-sync-operator.yaml
