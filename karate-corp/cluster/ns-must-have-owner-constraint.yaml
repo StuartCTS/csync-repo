@@ -9,7 +9,8 @@ spec:
     kinds:
       - apiGroups: [""]
         kinds: ["Namespace"]
+    excludedNamespaces: ["kube-system", "gatekeeper-system", "default", "lens-metrics"]
   parameters:
     labels:
       - key: "owner"
-  excludedNamespaces: ["kube-system", "gatekeeper-system", "default", "lens-metrics"]
+
