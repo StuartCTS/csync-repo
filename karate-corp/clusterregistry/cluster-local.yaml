@@ -4,3 +4,4 @@ metadata:
   name: cluster-local
   labels:
     environment: local
+    location: local
