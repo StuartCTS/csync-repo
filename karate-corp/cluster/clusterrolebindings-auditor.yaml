@@ -4,7 +4,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: auditors
   annotations:
-    configmanagement.gke.io/cluster-selector: select-location-belgium
+    configmanagement.gke.io/cluster-selector: select-location-local
 subjects:
 - kind: User
   name: auditor@foo-corp.com
