@@ -3,7 +3,7 @@ kind: ConfigManagement
 metadata:
   name: config-management
 spec:
-  clusterName: idaho
+  clusterName: iowa
   git:
     syncRepo: https://github.com/StuartCTS/csync-repo
     syncBranch: main 
