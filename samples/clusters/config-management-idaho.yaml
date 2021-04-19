@@ -1,0 +1,14 @@
+piVersion: configmanagement.gke.io/v1
+kind: ConfigManagement
+metadata:
+  name: config-management
+spec:
+  clusterName: idaho
+  git:
+    syncRepo: https://github.com/StuartCTS/csync-repo
+    syncBranch: main 
+    secretType: none
+    policyDir: karate-corp
+  policyController:
+    enabled: true
+    exemptableNamespaces: ["kube-system","default","config-management-system","config-management-monitoring","gatekeeper-system"]
