@@ -7,7 +7,7 @@ metadata:
     configmanagement.gke.io/cluster-selector: select-location-local
 subjects:
 - kind: User
-  name: auditor@foo-corp.com
+  name: auditor@karate-corp.com
   apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: ClusterRole

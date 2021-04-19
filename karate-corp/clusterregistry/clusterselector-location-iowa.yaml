@@ -2,8 +2,8 @@
 kind: ClusterSelector
 apiVersion: configmanagement.gke.io/v1
 metadata:
-  name: select-location-belgium
+  name: select-location-iowa
 spec:
   selector:
     matchLabels:
-      location: belgium
+      location: iowa
