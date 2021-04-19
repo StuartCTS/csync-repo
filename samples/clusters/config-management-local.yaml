@@ -1,4 +1,4 @@
-piVersion: configmanagement.gke.io/v1
+apiVersion: configmanagement.gke.io/v1
 kind: ConfigManagement
 metadata:
   name: config-management
