@@ -1,0 +1,7 @@
+# creates namespace named "team1"  
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: team2
+  labels:
+    owner: team2
