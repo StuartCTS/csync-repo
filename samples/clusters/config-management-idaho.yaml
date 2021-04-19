@@ -10,5 +10,5 @@ spec:
     secretType: none
     policyDir: karate-corp
   policyController:
-    enabled: false
+    enabled: true
     exemptableNamespaces: ["kube-system","default","config-management-system","config-management-monitoring","gatekeeper-system"]
