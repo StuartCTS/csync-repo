@@ -1,0 +1,1 @@
+In here we define objects we would wish to be present in all 'child' namespaces defined under this abstract one - e.g. roles, rolebindings etc

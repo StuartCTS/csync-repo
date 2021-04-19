@@ -5,10 +5,11 @@ metadata:
 spec:
   enforcementAction: dryrun
   match:
+    excludedNamespaces: ["kube-system", "gatekeeper-system"]
     kinds:
       - apiGroups: [""]
         kinds: ["Namespace"]
   parameters:
     labels:
       - key: "owner"
-  excludedNamespaces: ["kube-system", "gatekeeper-system"]
+
