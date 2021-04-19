@@ -11,4 +11,4 @@ spec:
   parameters:
     labels:
       - key: "owner"
-  excludedNamespaces: ["kube-system", "gatekeeper-system"]
+  excludedNamespaces: ["kube-system", "gatekeeper-system", "default", "lens-metrics"]
