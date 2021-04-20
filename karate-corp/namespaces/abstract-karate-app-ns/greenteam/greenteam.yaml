@@ -4,3 +4,4 @@ metadata:
   name: greenteam
   labels:
     owner: green
+    env: prod
