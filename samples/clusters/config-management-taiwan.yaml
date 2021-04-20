@@ -1,10 +1,10 @@
-#  us-central1-a
+#  asia-east1-a
 apiVersion: configmanagement.gke.io/v1
 kind: ConfigManagement
 metadata:
   name: config-management
 spec:
-  clusterName: iowa
+  clusterName: taiwan
   git:
     syncRepo: https://github.com/StuartCTS/csync-repo
     syncBranch: main 

@@ -1,3 +1,4 @@
+#  europe-west1-b
 apiVersion: configmanagement.gke.io/v1
 kind: ConfigManagement
 metadata:
