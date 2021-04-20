@@ -4,5 +4,4 @@ kind: Namespace
 metadata:
   name: hello
   labels:
-    owner: blueteam
-    foo: bar
+    owner: me
