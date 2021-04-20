@@ -1,3 +1,10 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: fluentd
+  labels:
+    owner: ops
+---
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
