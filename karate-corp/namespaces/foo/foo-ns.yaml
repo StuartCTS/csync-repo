@@ -1,9 +1,0 @@
-# creates namespace named "foo"  
-apiVersion: v1
-kind: Namespace
-metadata:
-  annotations:
-    configmanagement.gke.io/cluster-selector: select-location-local
-  name: foo
-  labels:
-    owner: you
