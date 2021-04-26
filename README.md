@@ -65,7 +65,7 @@ spec:
     policyDir: karate-corp
   policyController:
     enabled: true
-    ```
+```
 
 Note the repo details and the fact a unique cluster name must be specified. Apply this to the cluster:
 ```
@@ -73,8 +73,9 @@ kubectl apply -f config-management.yaml
 ```
 
 Make sure you are using `kubectl with the appropriate context - i.e. if using multiple clusters, use 
+
 ```
-kubectl apply -f config-management1.yaml --context=CLUSTER_NAME
+kubectl apply -f config-management.yaml --context=CLUSTER_NAME
 ```
 
 *Note* only add the last two lines if you have install _Config Management_ (as opposed to _Config Sync_) and intend to use Policy Controller.
@@ -86,9 +87,24 @@ At this point the Config Sync should be synchronizing objects stored in your con
 nomos status
 ```
 
-Note when first syncing, you may see various errors being reported until all elements have been synced. If after a while you are seing the same error consistently, review the log and events - this is usually to do with:
+Note when first syncing, you may see various errors being reported until all elements have been synced. If after a while you are seeing the same error consistently, review the log and events - this is usually to do with:
+
 - misconfiguration of the repo location/branch/folder/creds
-- 
+- lack of quota/resource on the cluster
+
+## Config Sync features
+
+There are samples illustrating a number of cluster configuration and management features within this repo. Specific instructions listed below
+
+### Namespace management
+[hello](karate-corp/namespaces/hello/hello.yaml) defines a namespace - adding these to the repo will ensure the ns gets created on asuitable clusters. If you delete this, the ns will be re-created.
+
+
+### Daemonset deployment
+Config Sync can be used to apply any yaml as you would via `kubectl apply -f ...`. A [fluentd daemonset deployment](karate-corp/namespaces/fluentd/fluentd-es.yaml) is included to illustrate this, deployed to a `fluentd` namespace. Note as configured this will be deployed on all clusters. 
+
+If using Policy Controller to apply policies, make sure you add the `fluentd` ns to the list of exclusions.
+
 
 PolicyController
 
