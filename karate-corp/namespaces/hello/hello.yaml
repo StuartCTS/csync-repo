@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Namespace
 metadata:
   # annotations:
-  #   configmanagement.gke.io/cluster-selector: select-location-belgium
+  #   configmanagement.gke.io/cluster-selector: select-env-prod
   name: hello
   labels:
     owner: me

@@ -8,4 +8,4 @@ spec:
     kinds:
       - apiGroups: [""]
         kinds: ["Pod"]
-    excludedNamespaces: ["kube-system", "config-management-system", "config-management-monitoring","gatekeeper-system", "lens-metrics"]
+    excludedNamespaces: ["kube-system", "fluentd", "config-management-system", "config-management-monitoring","gatekeeper-system", "lens-metrics"]

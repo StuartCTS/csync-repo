@@ -47,10 +47,10 @@ Note technically ConfigManager is only valid for licensed Anthos subscriptions a
 At this point you should namespaces and associated objects created in the cluster, but there will be no active syncing of resources - to action this, you need to setup access to the repo and configure the installation.
 
 ### Config repo setup
-Make sure you have forked this repo to a suitable location. Note for simplicity tis demo assumes the use of a public repo - this just means we dont have to configure authentication for Config SYnc - however this would be most likely required in any realistic deployment scenario. If you need to use a private repo see here for configuration steps, see details [here](https://cloud.google.com/kubernetes-engine/docs/add-on/config-sync/how-to/installing?hl=en#git-creds-secret) and add the appropriate info to the config management configuration.
+Make sure you have forked this repo to a suitable location. Note for simplicity tis demo assumes the use of a public repo - this just means we don't have to configure authentication for Config SYnc - however this would be most likely required in any realistic deployment scenario. If you need to use a private repo see here for configuration steps, see details [here](https://cloud.google.com/kubernetes-engine/docs/add-on/config-sync/how-to/installing?hl=en#git-creds-secret) and add the appropriate info to the config management configuration.
 
 ### Configuring Sync
-COnfig CSync is configured by applying a yaml based configuration - a minimal example is shown below:
+Config CSync is configured by applying a yaml based configuration - a minimal example is shown below:
 ```
 apiVersion: configmanagement.gke.io/v1
 kind: ConfigManagement
@@ -92,6 +92,19 @@ Note when first syncing, you may see various errors being reported until all ele
 - misconfiguration of the repo location/branch/folder/creds
 - lack of quota/resource on the cluster
 
+### Cluster registration  
+For each of your enrolled clusters you should add a cluster registration to the `/clusterregistry folder of your repo (see e.g. [](karate-corp/clusterregistry/cluster-local.yaml) ). This will allow you to define cluster selectors based upon teh labels attached to these cluster definitions. Note the names _must_ correspond with those used when configuring config-sync on the cluster. 
+
+In this repo, it is assumes there will be four clusters, three on GKE (`belgium`, `iowa` and `taiwan`) and one local cluster (`docker-desktop`). you will need something similar to demonstrate concepts such as locality constraints or configuration targeting via cluster selectors.
+
+### Cluster selectors
+There are two sample cluster selector types based upon the above sample clusters:
+
+- location selectors, one for each cluster e.g.[](karate-corp/clusterregistry/clusterselector-location-iowa.yaml)
+- an environment based selector, based upon an environment label set for each cluster e.g. [](karate-corp/clusterregistry/clusterselector-env-prod.yaml)
+
+THese can be used with the correct annotations to apply configurations selectively to individual or groups of clusters
+
 ## Config Sync features
 
 There are samples illustrating a number of cluster configuration and management features within this repo. Specific instructions listed below
@@ -99,50 +112,93 @@ There are samples illustrating a number of cluster configuration and management 
 ### Namespace management
 [hello](karate-corp/namespaces/hello/hello.yaml) defines a namespace - adding these to the repo will ensure the ns gets created on asuitable clusters. If you delete this, the ns will be re-created.
 
-
 ### Daemonset deployment
-Config Sync can be used to apply any yaml as you would via `kubectl apply -f ...`. A [fluentd daemonset deployment](karate-corp/namespaces/fluentd/fluentd-es.yaml) is included to illustrate this, deployed to a `fluentd` namespace. Note as configured this will be deployed on all clusters. 
+Config Sync can be used to apply any yaml as you would via `kubectl apply -f ...`. A [fluentd ElasticSearch daemonset deployment](karate-corp/namespaces/fluentd/fluentd-es.yaml) is included to illustrate this, deployed to a `fluentd` namespace. Note as configured this will be deployed on all clusters. 
 
 If using Policy Controller to apply policies, make sure you add the `fluentd` ns to the list of exclusions.
 
+### Locality enforcement
+Objects defined in the `/cluster` folder have cluster scope and are generally applied to all clusters. However supposing we only want,sa, an auditor privilege to be available in a specific location? The [clusterrole-auditor](karate-corp/cluster/clusterrole-auditor.yaml) clusterrole is annotated to use the [cluster-belgium](karate-corp/clusterregistry/cluster-belgium.yaml) cluster selector -i.e. it will only be applied to clusters that satisfy that selector - in this case, the `belgium` cluster only.
 
-PolicyController
+### Abstract namespaces
+Namespaces can be defined within an abstract namespace - as such they can inherit common configurations defined at that level. In the example, both blue and green team namespaces will automatically inherit the `ops-role` and associated binding.
 
-CRD
+### Namespace selectors
+As above, an SRE admin role is defined in teh abstract namespaces. However, this includes a reference (via annotation) to the [sre-supported-selector](karate-corp/namespaces/abstract-karate-app-ns/sre-supported-selector.yaml), which selects only namespaces with the environment label matching 'prod. As such, the sre-admin role will only be present in the `greenteam` namespace, as this is labeled being in the prod env.
 
+## PolicyController
+Policy COntroller is an integrated version of OPA Gatekeeper, offered as part of ACM. It allows policies governing the behaviour of objects in the cluster to be authored and applied as YAML. Combined with ConfigSync, these can also be managed and deployed across clusters in a GitOps manner.
 
+Policy Controller ships witha library of policy templates that are installed as default in the cluster as CRDs, i.e.
 
+```
+stuart@Stuarts-MacBook-Pro config-sync % kubectl get constrainttemplates
+NAME                                      AGE
+allowedserviceportname                    7d
+destinationruletlsenabled                 7d
+disallowedauthzprefix                     7d
+gcpstoragelocationconstraintv1            7d
+k8sallowedrepos                           7d
+k8sblocknodeport                          7d
+k8sblockprocessnamespacesharing           7d
+k8scontainerlimits                        7d
+k8scontainerratios                        7d
+...
+```
 
-TO DO write up install and put demo together
+The templates are parametrized. Policies are applied by creating _constraints_ that are based upon these tempaltes, supplying parameters, e.g. a policy that requires namespaces to have a specific label:
 
-307  kubectl apply -f config-sync-operator.yaml
+```
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredLabels
+metadata:
+  name: ns-must-have-owner
+spec:
+  enforcementAction: dryrun
+  match:
+    excludedNamespaces: ["kube-system", "gatekeeper-system"]
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Namespace"]
+  parameters:
+    labels:
+      - key: "owner"
+```
 
-  310  vi config-management.yaml
-  311  ls -la
-  312  kubectl apply -f config-management.yaml
-  313  git clone https://github.com/StuartCTS/csync-repo.git
-  314  cd csync-repo
-  315  ls -la
-  316  code .
-  317  cd ../..
-  318  ls -la
-  319  cd config-sync
-  320  nomos
-  321  nomos status
-  322  pwd
-  323  ls -la
-  324  cd csync-repo
-  325  nomos init
-  326  nomos init --force
-  327  ls -la
-  328  cat README.md
-  329  kubectl get all -n shipping-dev
-  330  ls -la
-  331  cd ..
-  332  ls -la
-  333  bat config-management.yaml
-  334  kubectl get resource-quota -n shipping-dev
-  335  kubectl get resourcequota -n shipping-dev
-  336  kubectl get resourcequota -n shipping-dev
-  337  tree
-  338  history
+The constraint references the `K8sRequiredLabels` template, specifying that objects of type 'namespace' must have the label 'owner' present in their definition, otherwise the constraint will be violated. Depending on the _enforcement_ of the policy, this will either be audited or blocked via the Policy Controller admission controller - ie. namespace creation will be prevented until the issue is remediated.
+
+### Installation
+As above via the COnfig Management configuration.
+
+### Creating a policy
+Simple namespace label policy as above - see [](samples/constraints/ns-must-have-owner-constraint.yaml).
+
+```
+kubectl apply -f samples/constraints/ns-must-have-owner-constraint.yaml
+```
+
+### Viewing policies
+
+View all templates installed:
+```
+kubectl get constrainttemplates
+```
+
+All polices (constraints)
+```
+kubectl get constraints
+```
+
+### View detailed info on policy
+```
+kubectl describe k8srequiredlabels ns-must-have-owner
+```
+
+To audit all policies:
+
+```
+kubectl logs -n gatekeeper-system -l gatekeeper.sh/system=yes
+```
+
+## Apply policy via ConfigSync
+Policies are cluster scoped objects - as such they should be copied to the `/clusters` folder

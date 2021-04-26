@@ -5,4 +5,4 @@ metadata:
   name: iowa
   labels:
     environment: prod
-    location: usa
+    location: iowa
