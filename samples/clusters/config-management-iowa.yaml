@@ -13,3 +13,4 @@ spec:
   policyController:
     enabled: true
     exemptableNamespaces: ["kube-system","default","config-management-system","config-management-monitoring","gatekeeper-system"]
+    # logDeniesEnabled: true
