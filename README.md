@@ -202,3 +202,25 @@ kubectl logs -n gatekeeper-system -l gatekeeper.sh/system=yes
 
 ## Apply policy via ConfigSync
 Policies are cluster scoped objects - as such they should be copied to the `/clusters` folder
+
+## Demo - PSP
+Policies can be used in place of PSPs to control pod behaviours. 
+
+1. Spin up the pod as defined in [](samples/constraints/nginx_privileged.yaml) 
+```
+kubectl apply -f samples/constraints/nginx_privileged.yaml
+```
+
+This runs nginx as privileged container. Show that the pod is created ok, then delete.
+
+3. Apply the [](samples/constraints/no-priv-containers.yaml) constraint 
+```
+kubectl apply -f samples/constraints/no-priv-containers.yaml
+```
+Check this is running OK, ensure the enforcementAction is set to 'deny'. If using ConfigSync to deploy, check change has been synced to cluster
+
+5. Try to create the nginx pod again - this should be blocked by the constraint with a message similar to:
+```
+stuart@Stuarts-MacBook-Pro config-sync % kubectl apply -f csync-repo/samples/constraints/nginx_privileged.yaml
+Error from server ([denied by psp-privileged-container] Privileged container is not allowed: nginx, securityContext: {"privileged": true}): error when creating "csync-repo/samples/constraints/nginx_privileged.yaml": admission webhook "validation.gatekeeper.sh" denied the request: [denied by psp-privileged-container] Privileged container is not allowed: nginx, securityContext: {"privileged": true}
+```
