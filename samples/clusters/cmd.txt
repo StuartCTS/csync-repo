@@ -17,10 +17,11 @@ gcloud container clusters get-credentials belgium --zone europe-west1-b --projec
 gcloud beta container --project "stuart-dev-example-01" clusters create-auto "cicd" --region "europe-west1" --release-channel "regular" --network "projects/stuart-dev-example-01/global/networks/default" --subnetwork "projects/stuart-dev-example-01/regions/europe-west1/subnetworks/default" --cluster-ipv4-cidr "/17" --services-ipv4-cidr "/22"
 
 gcloud container clusters get-credentials cicd --region europe-west1 --project stuart-dev-example-01stuart_barnett@cloudshell:~ (stuart-dev-example-01)$ gcloud container clusters get-credentials cicd --region europe-west1 --project stuart-dev-example-01
-# argo
+
+# argoCD (installs argo ApplicationSet controller + argocd)
 kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj-labs/applicationset/v0.1.0/manifests/install-with-argo-cd.yaml
-(installs argo ApplicationSet controller + argocd)
+
 
 kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
 
@@ -43,7 +44,7 @@ echo $secret_name
 kubectl -n kube-system get secrets ${secret_name} -o go-template='{{index .data "ca.crt"}}'
 kubectl -n kube-system get secrets ${secret_name} -o go-template='{{.data.token}}' | base64 -d
 
-#set context to cicd cluster first
+# set context to cicd cluster first
 kubectl apply -f csync-repo/samples/clusters/argo_<your_cluster>_secret.yaml -n argocd
 
 #app set
