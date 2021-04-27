@@ -41,9 +41,10 @@ secret_name=$(kubectl -n kube-system get sa argocd -o go-template='{{range .secr
 echo $secret_name
 
 kubectl -n kube-system get secrets ${secret_name} -o go-template='{{index .data "ca.crt"}}'
+kubectl -n kube-system get secrets ${secret_name} -o go-template='{{.data.token}}' | base64 -d
 
 #set context to cicd cluster first
-kubectl apply -f csync-repo/samples/clusters/argo_belgium_secret.yaml -n argocd
+kubectl apply -f csync-repo/samples/clusters/argo_<your_cluster>_secret.yaml -n argocd
 
 #app set
-kubectl apply -f csync-repo/samples/clusters/app_set.yaml -n argocd (create ns first!)
+kubectl apply -f csync-repo/samples/clusters/app_set.yaml -n argocd (you may need to create ns first)
