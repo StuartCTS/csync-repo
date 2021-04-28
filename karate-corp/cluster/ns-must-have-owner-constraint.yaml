@@ -1,16 +1,18 @@
 # apiVersion: constraints.gatekeeper.sh/v1beta1
-# kind: K8sRequiredLabels
-# metadata:
-#   name: ns-must-have-owner
-# spec:
-#   enforcementAction: dryrun  
-#   # enforcementAction: deny
-#   match:
-#     kinds:
-#       - apiGroups: [""]
-#         kinds: ["Namespace"]
-#     excludedNamespaces: ["kube-system", "fluentd","config-management-system", "config-management-monitoring","gatekeeper-system", "default", "lens-metrics"]
-#   parameters:
-#     labels:
-#       - key: "owner"
+kind: K8sRequiredLabels
+metadata:
+  name: ns-must-have-owner
+  annotations:
+    configmanagement.gke.io/cluster-selector: select-location-local
+spec:
+  enforcementAction: dryrun  
+  # enforcementAction: deny
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Namespace"]
+    excludedNamespaces: ["kube-system", "fluentd","config-management-system", "config-management-monitoring","gatekeeper-system", "default", "lens-metrics"]
+  parameters:
+    labels:
+      - key: "owner"
 
