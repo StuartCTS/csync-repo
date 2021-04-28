@@ -1,0 +1,9 @@
+# creates namespace named "ippon"  
+apiVersion: v1
+kind: Namespace
+metadata:
+  # annotations:
+  #   configmanagement.gke.io/cluster-selector: select-env-prod
+  name: ippon
+  labels:
+    owner: me
