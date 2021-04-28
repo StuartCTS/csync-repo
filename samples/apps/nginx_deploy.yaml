@@ -6,12 +6,13 @@ spec:
   selector:
     matchLabels:
       app: nginx
-  replicas: 4 # tells deployment to run 2 pods matching the template
+  replicas: 2 # tells deployment to run 2 pods matching the template
   template:
     metadata:
       labels:
         app: nginx
         owner: blueteam
+        dan: yellow
     spec:
       containers:
       - name: nginx
