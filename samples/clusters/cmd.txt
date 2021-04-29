@@ -19,6 +19,9 @@ gcloud beta container --project "stuart-dev-example-01" clusters create-auto "ci
 gcloud container clusters get-credentials cicd --region europe-west1 --project stuart-dev-example-01
 
 
+# autopilot iowa (for CD test)
+gcloud beta container --project "stuart-dev-example-01" clusters create-auto "iowa" --region "us-central1" --release-channel "rapid" --network "projects/stuart-dev-example-01/global/networks/default" --subnetwork "projects/stuart-dev-example-01/regions/us-central1/subnetworks/default" --cluster-ipv4-cidr "/17" --services-ipv4-cidr "/22"
+
 
 # argoCD (installs argo ApplicationSet controller + argocd)
 kubectl create namespace argocd
@@ -65,4 +68,13 @@ kubectl get pods -A
 
 kubectl apply -f csync-repo/samples/clusters/config-management-<your_cluster>>.yaml 
 
+# autopilot cluster
+kubectl create ns cicd
 
+kubectl apply -f csync-repo/samples/clusters/argo_roles-ap.yaml -n cicd
+
+kubectl -n cicd get secrets ${secret_name} -o go-template='{{index .data "ca.crt"}}'
+kubectl -n cicd get secrets ${secret_name} -o go-template='{{.data.token}}' | base64 -d
+
+# doesnt work when attempting deploy, throws error:
+MutatingWebhookConfiguration.admissionregistration.k8s.io: mutatingwebhookconfigurations.admissionregistration.k8s.io is forbidden: User "system:serviceaccount:cicd:argocd" cannot list resource "mutatingwebhookconfigurations" in API group "admissionregistration.k8s.io" at the cluster scope: GKEAutopilot authz: cluster scoped resource "mutatingwebhookconfigurations/" is managed and access is denied
