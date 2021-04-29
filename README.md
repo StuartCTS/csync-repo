@@ -1,7 +1,32 @@
 # csync-repo
-Demonstration repo for use wth Google [Config sync](https://cloud.google.com/kubernetes-engine/docs/add-on/config-sync/overview?hl=en) and [Policy Controller](https://cloud.google.com/anthos-config-management/docs/concepts/policy-controller?hl=en). These are both individual components of [Anthos Config Management](https://cloud.google.com/anthos-config-management/docs/overview?hl=en).
+Demonstration repo for use wth Google [Config sync](https://cloud.google.com/kubernetes-engine/docs/add-on/config-sync/overview?hl=en) and [Policy Controller](https://cloud.google.com/anthos-config-management/docs/concepts/policy-controller?hl=en). These are both individual components of [Anthos Config Management](https://cloud.google.com/anthos-config-management/docs/overview?hl=en). Note Config Sync can be installed on GKE clusters, but PolicyController is a licensed component of Anthos.
 
-Conceptually, ConfigSync enables a Gitops style flow for managing configuration of GKE clusters. Configurations are stored as yaml in a a git repo, and an agent on the cluster continual syncs with the repo, detecting and applying any changes. Similarly, if discrepancies are noticed between the state of the cluster and the repo, it will automatically attempt to resolve these.
+Conceptually, ConfigSync enables a GitOps style flow for managing configuration of GKE clusters. Configurations are stored as yaml in a a git repo, and an agent on the cluster continual syncs with the repo, detecting and applying any changes. Similarly, if discrepancies are noticed between the state of the cluster and the repo, it will automatically attempt to resolve these.
+
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+    - [git repo](#git-repo)
+    - [nomos](#nomos)
+    - [Cluster setup and install](#cluster-setup-and-install)
+    - [Install the Config Management operator](#install-the-config-management-operator)
+    - [Config repo setup](#config-repo-setup)
+    - [Configuring Sync](#configuring-sync)
+    - [Checking the install](#checking-the-install)
+    - [Cluster registration](#cluster-registration)
+    - [Cluster selectors](#cluster-selectors)
+  - [Config Sync features](#config-sync-features)
+    - [Namespace management](#namespace-management)
+    - [Daemonset deployment](#daemonset-deployment)
+    - [Locality enforcement](#locality-enforcement)
+    - [Abstract namespaces](#abstract-namespaces)
+    - [Namespace selectors](#namespace-selectors)
+  - [PolicyController](#policycontroller)
+    - [Installation](#installation-1)
+    - [Creating a policy](#creating-a-policy)
+    - [Viewing policies](#viewing-policies)
+    - [View detailed info on policy](#view-detailed-info-on-policy)
+    - [Apply policy via ConfigSync](#apply-policy-via-configsync)
+  - [Demo - PSP](#demo---psp)
 
 ## Prerequisites
 k8s cluster(s) with `kubectl` access
@@ -200,10 +225,10 @@ To audit all policies:
 kubectl logs -n gatekeeper-system -l gatekeeper.sh/system=yes
 ```
 
-## Apply policy via ConfigSync
+### Apply policy via ConfigSync
 Policies are cluster scoped objects - as such they should be copied to the `/clusters` folder
 
-## Demo - PSP
+### Demo - PSP
 Policies can be used in place of PSPs to control pod behaviours. 
 
 1. Spin up the pod as defined in [](samples/constraints/nginx_privileged.yaml) 
