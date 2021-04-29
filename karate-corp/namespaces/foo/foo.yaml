@@ -1,0 +1,9 @@
+# creates namespace named "hello"  
+apiVersion: v1
+kind: Namespace
+metadata:
+  # annotations:
+  #   configmanagement.gke.io/cluster-selector: select-env-prod
+  name: foo
+  labels:
+    owner: bar
