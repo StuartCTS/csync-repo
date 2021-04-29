@@ -39,7 +39,7 @@ argocd account update-password
 
 https://localhost:8080/login?return_url=https%3A%2F%2Flocalhost%3A8080%2Fapplications - login admin/(newpwd)
 
-# enrol target cluster - make sure context is switcehd
+# enrol target cluster - make sure context is switched
 kubectl get-nodes 
 kubectl cluster-info
 
