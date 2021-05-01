@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Namespace
 metadata:
   annotations:
-    configmanagement.gke.io/cluster-selector: select-env-local
+    configmanagement.gke.io/cluster-selector: select-location-local
     cnrm.cloud.google.com/project-id: stuart-dev-example-01
   name: kcc
   labels:
