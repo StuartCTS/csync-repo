@@ -1,0 +1,7 @@
+apiVersion: storage.cnrm.cloud.google.com/v1beta1
+kind: StorageBucket
+metadata:
+  name: sbbucket-europe-west2-stuart-dev-example-01
+  namespace: kcc
+spec:
+  location: europe-west2

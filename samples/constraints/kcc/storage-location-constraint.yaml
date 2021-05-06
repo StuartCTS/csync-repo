@@ -1,0 +1,21 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: GCPStorageLocationConstraintV1
+metadata:
+  name: singapore-and-jakarta-and-iowa-only
+spec:
+  enforcementAction: deny
+  match:
+    kinds:
+    - apiGroups:
+      - storage.cnrm.cloud.google.com
+      kinds:
+      - StorageBucket
+    namespaces:
+    - kcc
+  parameters:
+    locations:
+    - asia-southeast1
+    - asia-southeast2
+    - us-west1
+    exemptions:
+    - stuart-dev-example-01_cloudbuild

@@ -1,0 +1,7 @@
+apiVersion: storage.cnrm.cloud.google.com/v1beta1
+kind: StorageBucket
+metadata:
+  name: sbbucket-us-west1-stuart-dev-example-01
+  namespace: kcc
+spec:
+  location: us-west1
