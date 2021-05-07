@@ -1,4 +1,4 @@
-# kcc managed infra - local cluster ony 
+# kcc managed infra - note selector restricts to local cluster only 
 apiVersion: v1
 kind: Namespace
 metadata:
